@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karinderya Receipt Generator</title>
+    <!-- Link to CSS file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <h1>🍽️ Rui's Karinderya</h1>
+    <h3>Masarap, at Mura!</h3>
+    
+    <!-- The Form Starts Here -->
+    <form method="POST">
+        
+        <!-- Customer Info Section -->
+        <div class="form-group">
+            <h4>Customer Information:</h4>
+            <label for="customer_name">Customer Name:</label>
+            <input type="text" id="customer_name" name="customer_name" required>
+            
+            <label for="table_number">Table Number:</label>
+            <input type="text" id="table_number" name="table_number" required>
+        </div>
+
+        <!-- Main Dishes Section -->
+        <div class="form-group">
+            <h4>Main Dishes:</h4>
+            <label><input type="checkbox" name="menu_item" value="Adobo"> Adobo - ₱80</label><br>
+            <label><input type="checkbox" name="menu_item" value="Sinigang na Baboy"> Sinigang na Baboy - ₱90</label><br>
+            <label><input type="checkbox" name="menu_item" value="Menudo"> Menudo - ₱75</label><br>
+            <label><input type="checkbox" name="menu_item" value="Afritada"> Afritada - 80</label><br>
+            <label><input type="checkbox" name="menu_item" value="Chopseuy"> Chopseuy - ₱70</label><br>
+            <label><input type="checkbox" name="menu_item" value="Fried Chicken"> Fried Chicken - ₱85</label><br>
+            <label><input type="checkbox" name="menu_item" value="Fried Fish (Tilapia)"> Fried Fish (Tilapia) - ₱75</label><br>
+            <label><input type="checkbox" name="menu_item" value="Tokwa't Baboy"> Tokwa't Baboy - ₱60</label><br>
+            <label><input type="checkbox" name="menu_item" value="Lumpiang Shanghai (3 pcs)"> Lumpiang Shanghai (3 pcs) - ₱50</label><br>
+            <label><input type="checkbox" name="menu_item" value="Ginisang Monggo"> Ginisang Monggo - 55</label>
+        </div>
+        
+        <!-- Sides & Drinks Section -->
+        <div class="form-group">
+            <h4>Sides & Drinks:</h4>
+            <label><input type="checkbox" name="menu_item" value="Rice"> Rice - ₱15</label><br>
+            <label><input type="checkbox" name="menu_item" value="Soup"> Soup - 20</label><br>
+            <label><input type="checkbox" name="menu_item" value="Softdrinks"> Softdrinks - ₱25</label>
+        </div>
+        
+        <button type="submit">Generate Receipt</button>
+    </form>
+
+    <!-- The Pop-up Modal -->
+    <div id="receiptModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            
+            {% if subtotal > 0 %}
+                <h3 style="text-align: center;">====== OFFICIAL RECEIPT ======</h3>
+                <p><b>Customer:</b> {{ customer_name }}</p>
+                <p><b>Table No:</b> {{ table_number }}</p>
+                <hr style="border-top: 1px dashed #000;">
+                <p><b>Items Ordered:</b></p>
+                <ul style="list-style-type: none; padding-left: 0;">
+                {% for item in items %}
+                    <li>• {{ item }}</li>
+                {% endfor %}
+                </ul>
+                <hr style="border-top: 1px dashed #000;">
+                <p>Subtotal: {{ "%.2f" | format(subtotal) }}</p>
+                <p>VAT (12%): ₱{{ "%.2f" | format(vat) }}</p>
+                <hr style="border-top: 1px dashed #000;">
+                <p style="font-size: 1.2em; text-align: right;"><b>Total: ₱{{ "%.2f" | format(total) }}</b></p>
+                <p style="text-align: center;"><i>Maraming Salamat!</i></p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Link to JavaScript file -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    
+    <!-- Script to show the popup if there is a receipt -->
+    {% if subtotal > 0 %}
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById('receiptModal').style.display = 'block';
+            });
+        </script>
+    {% endif %}
+
+</body>
+</html>
